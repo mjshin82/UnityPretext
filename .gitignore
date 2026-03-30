@@ -15,3 +15,12 @@ Thumbs.db
 
 # Claude
 .claude/
+
+# Development Unity project (generated folders)
+UnityProject~/Library/
+UnityProject~/Temp/
+UnityProject~/Logs/
+UnityProject~/UserSettings/
+UnityProject~/obj/
+UnityProject~/Builds/
+UnityProject~/MemoryCaptures/
