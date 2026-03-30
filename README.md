@@ -20,6 +20,14 @@ To pin a specific version, append a tag:
 https://github.com/mjshin82/UnityPretext.git#v0.1.0
 ```
 
+## Sample
+
+The package includes an **Editorial Engine** sample — a two-column editorial layout where text reflows in real time around bouncing circles. It demonstrates `LayoutNextLine()` with per-line variable widths for obstacle avoidance.
+
+To import: **Package Manager → UnityPretext → Samples → Import**.
+
+**Live demo:** [Play in browser](https://play.unity.com/en/games/42c8e3f0-e136-48df-894b-b901d4cf5aad/web)
+
 ## API
 
 UnityPretext serves two use cases:
@@ -184,14 +192,6 @@ Not implemented. Thai requires dictionary-based word segmentation for correct li
 
 **Bidi / RTL:**
 Not implemented. Arabic, Hebrew, and other right-to-left scripts are not supported for correct display ordering. TMP itself has limited RTL support.
-
-## Sample
-
-The package includes an **Editorial Engine** sample — a two-column editorial layout where text reflows in real time around bouncing circles. It demonstrates `LayoutNextLine()` with per-line variable widths for obstacle avoidance.
-
-To import: **Package Manager → UnityPretext → Samples → Import**.
-
-**Live demo:** [Play in browser](https://play.unity.com/en/games/42c8e3f0-e136-48df-894b-b901d4cf5aad/web)
 
 ## Credits
 
