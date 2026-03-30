@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PretextSample : MonoBehaviour {
+public class EditorialEngineSample : MonoBehaviour {
     [Header("Font")]
     [SerializeField] private TMP_FontAsset fontAsset;
     [SerializeField] private float fontSize = 18f;
@@ -12,6 +12,7 @@ public class PretextSample : MonoBehaviour {
     [Header("Layout")]
     [SerializeField] private float gutter = 40f;
     [SerializeField] private float columnGap = 30f;
+    [SerializeField] private float padding = 30f;
 
     [Header("Orb")]
     [SerializeField] private int orbCount = 4;
@@ -56,6 +57,8 @@ public class PretextSample : MonoBehaviour {
 
     private OrbState[] orbs;
     private PreparedText prepared;
+    private float activeFontSize;
+    private float activeLineHeight;
 
     private readonly List<TextMeshProUGUI> textPool = new();
     private int textPoolUsed;
@@ -68,9 +71,18 @@ public class PretextSample : MonoBehaviour {
     };
 
     private void Start() {
-        var options = PretextOptions.Default(fontAsset, fontSize);
-        prepared = PretextPreparer.Prepare(sampleText, options);
+        UpdateFontSize();
         InitOrbs();
+    }
+
+    private void UpdateFontSize() {
+        var rect = container.rect;
+        var aspect = rect.height / Mathf.Max(rect.width, 1f);
+        var scale = aspect > 1f ? Mathf.Lerp(1f, 3f, (aspect - 1f) / 1f) : 1f;
+        activeFontSize = fontSize * scale;
+        activeLineHeight = lineHeight * scale;
+        var options = PretextOptions.Default(fontAsset, activeFontSize);
+        prepared = PretextPreparer.Prepare(sampleText, options);
     }
 
     private void InitOrbs() {
@@ -111,7 +123,15 @@ public class PretextSample : MonoBehaviour {
         }
     }
 
+    private Vector2 lastContainerSize;
+
     private void Update() {
+        var rect = container.rect;
+        var size = new Vector2(rect.width, rect.height);
+        if (size != lastContainerSize) {
+            lastContainerSize = size;
+            UpdateFontSize();
+        }
         UpdateOrbs();
         Reflow();
     }
@@ -144,47 +164,43 @@ public class PretextSample : MonoBehaviour {
         var totalWidth = rect.width - gutter * 2;
         var colWidth = (totalWidth - columnGap) / 2f;
         var colXs = new[] { gutter, gutter + colWidth + columnGap };
+        var maxY = rect.height - padding;
 
         var cursor = 0;
-        var y = 0f;
-        var maxY = rect.height;
 
-        while (cursor < prepared.count && y < maxY) {
-            for (var col = 0; col < 2 && cursor < prepared.count; col++) {
-                var colX = colXs[col];
-                var colRight = colX + colWidth;
+        for (var col = 0; col < 2 && cursor < prepared.count; col++) {
+            var colX = colXs[col];
+            var colRight = colX + colWidth;
+            var y = padding;
 
-                // Collect all orb exclusion intervals for this line
-                var intervals = GetOrbExclusions(colX, colRight, y, lineHeight);
+            while (cursor < prepared.count && y < maxY) {
+                var intervals = GetOrbExclusions(colX, colRight, y, activeLineHeight);
 
                 if (intervals.Count == 0) {
-                    // No overlap — use full width
                     var line = PretextLayout.LayoutNextLine(prepared, colWidth, cursor);
                     PlaceText(line, colX, y);
                     cursor = line.endIndex;
                 } else {
-                    // Place text in empty slots
                     var slotStart = colX;
                     foreach (var interval in intervals) {
                         var slotWidth = interval.start - slotStart;
-                        if (slotWidth > fontSize * 2 && cursor < prepared.count) {
+                        if (slotWidth > activeFontSize * 2 && cursor < prepared.count) {
                             var line = PretextLayout.LayoutNextLine(prepared, slotWidth, cursor);
                             PlaceText(line, slotStart, y);
                             cursor = line.endIndex;
                         }
                         slotStart = interval.end;
                     }
-                    // Remaining space after the last orb
                     var lastSlotWidth = colRight - slotStart;
-                    if (lastSlotWidth > fontSize * 2 && cursor < prepared.count) {
+                    if (lastSlotWidth > activeFontSize * 2 && cursor < prepared.count) {
                         var line = PretextLayout.LayoutNextLine(prepared, lastSlotWidth, cursor);
                         PlaceText(line, slotStart, y);
                         cursor = line.endIndex;
                     }
                 }
-            }
 
-            y += lineHeight;
+                y += activeLineHeight;
+            }
         }
 
         for (var i = textPoolUsed; i < textPool.Count; i++) {
@@ -251,10 +267,10 @@ public class PretextSample : MonoBehaviour {
 
         var tmp = GetPooledText();
         tmp.text = text;
-        tmp.fontSize = fontSize;
+        tmp.fontSize = activeFontSize;
         tmp.rectTransform.anchoredPosition = new Vector2(x, -y);
-        tmp.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, line.width + fontSize);
-        tmp.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, lineHeight);
+        tmp.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, line.width + activeFontSize);
+        tmp.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, activeLineHeight);
     }
 
     private string BuildLineText(PretextLine line) {

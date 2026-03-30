@@ -449,16 +449,17 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a61e908afcbb4f77974bb49ea8b9e11, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ThirdParty::PretextSample
+  m_EditorClassIdentifier: ThirdParty::EditorialEngineSample
   fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   fontSize: 20
   lineHeight: 30
   gutter: 40
   columnGap: 30
+  padding: 30
   orbCount: 4
   orbRadius: 60
-  orbSpeedMin: 25
-  orbSpeedMax: 55
+  orbSpeedMin: 50
+  orbSpeedMax: 110
   orbPadding: 12
   orbSprite: {fileID: 21300000, guid: 3760cfc4b2cd544d8a5c84949cb36326, type: 3}
   container: {fileID: 159770947}

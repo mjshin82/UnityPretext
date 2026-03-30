@@ -24,3 +24,9 @@ UnityProject~/UserSettings/
 UnityProject~/obj/
 UnityProject~/Builds/
 UnityProject~/MemoryCaptures/
+
+# Symlinks in Assets (point to package source above)
+UnityProject~/Assets/Pretext
+UnityProject~/Assets/Pretext.meta
+UnityProject~/Assets/Samples/
+UnityProject~/Assets/Samples.meta
