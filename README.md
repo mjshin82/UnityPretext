@@ -6,7 +6,19 @@ UnityPretext implements the same two-phase architecture as the original: an expe
 
 ## Installation
 
-Copy the `Assets/Scripts/UnityPretext/` folder into your Unity project. Requires TextMesh Pro (included in Unity by default).
+**Unity 6000.0+** required. TextMesh Pro must be installed (included in Unity by default).
+
+Open **Window → Package Manager → + → Add package from git URL** and enter:
+
+```
+https://github.com/mjshin82/UnityPretext.git
+```
+
+To pin a specific version, append a tag:
+
+```
+https://github.com/mjshin82/UnityPretext.git#v0.1.0
+```
 
 ## API
 
@@ -175,7 +187,9 @@ Not implemented. Arabic, Hebrew, and other right-to-left scripts are not support
 
 ## Sample
 
-The `Assets/Scripts/UnityPretext/Sample/` folder contains `EditorialEngine` — a two-column editorial layout where text reflows in real time around bouncing circles. It demonstrates `LayoutNextLine()` with per-line variable widths for obstacle avoidance.
+The package includes an **Editorial Engine** sample — a two-column editorial layout where text reflows in real time around bouncing circles. It demonstrates `LayoutNextLine()` with per-line variable widths for obstacle avoidance.
+
+To import: **Package Manager → UnityPretext → Samples → Import**.
 
 ## Credits
 
